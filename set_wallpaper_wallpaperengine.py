@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from tkinter import *
 from tkinter import messagebox
 from pathlib import Path
@@ -5,11 +7,19 @@ from PIL import Image, ImageTk
 from utilities import *
 from monitors_list_gui import MonitorList
 from typing import NamedTuple
-import sys, subprocess, os
+import sys, subprocess
 
+# Main window title
 window_title = "Set wallpaper from Wallpaper Engine"
+
+# Wallpaper Engine wallpaper path
 wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
+
+# Listbox selection
 selection = ""
+
+# Delay in case the wallpaper fails to load
+delay = 0.5
 
 
 class Wallpaper(NamedTuple):
@@ -75,14 +85,17 @@ def apply_wallpaper():
     ensure_executable_script()
     
     current_text = ""
-    new_lines = []
+    new_lines = ["#!/bin/bash", f"sleep {delay}"]
+    skip_keywords = {"sleep", "#!/bin/bash", "hyprpaper"}
+    
     is_monitor_in_setting = False # In case the monitor is a new entry
     
     with open(bg_script_path, 'r') as bg_script:
         current_text = bg_script.read()
         
     for line in current_text.splitlines():
-        if "hyprpaper" in line:
+        # Skip these keywords; the first 2 are already added, the last one is not needed
+        if any(keyword in line for keyword in skip_keywords):
             continue
         
         if screen in line:
