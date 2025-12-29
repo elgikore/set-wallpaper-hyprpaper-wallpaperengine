@@ -30,6 +30,7 @@ def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
         messagebox.showerror("Path for Wallpaper Engine doesn't exist", "Wallpaper Engine isn't installed.",
                              detail=f"Please install Wallpaper Engine from Steam, and put the wallpapers in here: {wallpaperengine_path}.", 
                              parent=frame)
+        on_close(root, window_title)
         sys.exit(1)
 
 
