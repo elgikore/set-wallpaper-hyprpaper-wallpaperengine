@@ -4,7 +4,7 @@ import sys, subprocess
 from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
-from utilities import readonly_field_styling, force_floating_window_hyprland, on_close
+from utilities import readonly_field_styling, force_floating_window_hyprland, on_close, close_app
 from monitors_list_gui import MonitorList
 
 # File path for wallpaper
@@ -29,11 +29,16 @@ def set_wallpaper() -> None:
                              parent=root)
         return
 
-    selected_monitor = monitor_list.get()
-    hyprpaper_path = f"{Path.home()}/.config/hypr/hyprpaper.conf"
-
-    # Get current hyprpaper conf
-    settings = ""
+    screen = monitor_list.get()
+    pkill_regex = f"wallpaper..{screen}"
+    command_preload = f"hyprctl hyprpaper preload \"{img_path}\""
+    command_wallpaper = f"hyprctl hyprpaper wallpaper \"{screen},{img_path}\""
+    
+    # Close specific monitor of hyprpaper if selection is same with screen
+    close_app(pkill_regex)
+    
+    # Kill all linux-wallpaperengine instances if there is one
+    close_app("linux-wallpaperengine")
 
     try:
         with open(hyprpaper_path, 'r') as conf:
@@ -46,14 +51,14 @@ def set_wallpaper() -> None:
 
     # Change the wallpaper
     for line in settings.splitlines():
-        if selected_monitor in line:
+        if screen in line:
             old_wallpaper = line.split(',')[1]
             settings = settings.replace(old_wallpaper, img_path)
             is_monitor_in_conf = True
             break
 
     if not is_monitor_in_conf:
-        to_append = f"\npreload = {img_path}\nwallpaper = {selected_monitor},{img_path}\n"
+        to_append = f"\npreload = {img_path}\nwallpaper = {screen},{img_path}\n"
         settings += to_append
 
     # Write changes to file, reload, and close
