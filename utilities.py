@@ -96,5 +96,5 @@ class MonitorList(Frame):
         ok_button = ttk.Button(root, text="OK", command=command)
         ok_button.pack(pady=10)
         
-    def get(self): 
+    def get(self) -> str: 
         return self.__list_monitors_box.get()

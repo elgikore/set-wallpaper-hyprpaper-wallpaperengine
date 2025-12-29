@@ -27,7 +27,7 @@ class Wallpaper(NamedTuple):
     name: str
     preview_pic_path: Path
     
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} ({self.id})"
 
 
@@ -48,6 +48,7 @@ def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
         json_file_path = pic_dir / "project.json"
         metadata = None
         
+        # In case where the folder doesn't have a project.json for some reason
         if not json_file_path:
             wallpapers[pic_dir.name] = Wallpaper(pic_dir.name, "", None)
             continue
@@ -68,8 +69,11 @@ def show_preview_picture(event) -> None:
         return
     
     selection = wallpaper_list.get(selection)
-    matches = re.findall(r"\((\d*)\)", selection)
-    selection_id = matches[-1] # Grab the last item inside parenthesis
+    
+    # To grab the id in parenthesis since curselection() only returns strings
+    # After matching, grab the last item inside parenthesis since that's the id
+    matches = re.findall(r"\((\d*)\)", selection) 
+    selection_id = matches[-1]
         
     preview_pic_path = wallpapers[selection_id].preview_pic_path
     wallpaper_img = PilImage.open(preview_pic_path) 
@@ -85,7 +89,7 @@ def show_preview_picture(event) -> None:
     preview_canvas.image = tk_img
 
 
-def apply_wallpaper():
+def apply_wallpaper() -> None:
     screen = f"--screen-root {monitor_list.get()}"
     command = f"linux-wallpaperengine {screen} --scaling fill -s {selection_id} &"
     
@@ -146,7 +150,10 @@ frame.grid(row=0, column=0)
 # First column
 # [Top] Listbox of wallpapers
 wallpapers = dict(sorted(list_wallpaperengine_wallpapers().items()))
+
+# Convert to string representation for listbox
 wallpaper_names = [str(name) for name in wallpapers.values()]
+
 wallpaper_list_frame = Frame(frame)
 
 scrollbar = Scrollbar(wallpaper_list_frame, orient="vertical")
