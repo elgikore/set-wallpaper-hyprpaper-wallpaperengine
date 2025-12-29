@@ -2,14 +2,13 @@ from tkinter import *
 from tkinter import messagebox
 from pathlib import Path
 from PIL import Image, ImageTk
-from utilities import close_app, force_floating_window_hyprland, on_close, readonly_field_styling
+from utilities import *
 from monitors_list_gui import MonitorList
 from typing import NamedTuple
 import sys, subprocess, os
 
 window_title = "Set wallpaper from Wallpaper Engine"
 wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
-bg_script_path = Path("background.sh")
 selection = ""
 
 
@@ -62,22 +61,17 @@ def apply_wallpaper():
     screen = f"--screen-root {monitor_list.get()}"
     command = f"linux-wallpaperengine {screen} --scaling fill -s {selection} &"
     
-    close_app(screen) # Close specific monitor of linux-wallpaperengine if selection is same with screen
+    # Close specific monitor of linux-wallpaperengine if selection is same with screen
+    close_app(screen) 
     
     # Kill all hyprpaper instances if there is one
     close_app("hyprpaper")
 
-    if not bg_script_path.exists():
-        bg_script_path.touch()
-        bg_script_path.chmod(0o755) # Make it executable
-        
-        with open(bg_script_path, 'w') as bg_script:
-            bg_script.write("#!/bin/bash\n")
+    # Check if script exists; if not, create, else does nothing
+    check_and_create_script()
         
     # If for some reason the file is not executable
-    if not os.access(bg_script_path, os.X_OK):
-        bg_script_path.chmod(0o755)
-        
+    ensure_executable_script()
     
     current_text = ""
     new_lines = []
