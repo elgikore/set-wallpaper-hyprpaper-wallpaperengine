@@ -5,7 +5,6 @@ from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
 from utilities import *
-from monitors_list_gui import MonitorList
 
 # File path for wallpaper
 img_path = sys.argv[1] if len(sys.argv) != 1 else ""
