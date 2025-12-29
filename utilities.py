@@ -5,13 +5,15 @@ def force_floating_window_hyprland(window_name: str, is_enabled: bool = True) ->
         return
     
     if is_enabled:
-        subprocess.run(f"hyprctl keyword windowrulev2 \"float,class:^(Tk)$,title:^({window_name})\"")
+        subprocess.run(f"hyprctl keyword windowrulev2 \"float,class:^(Tk)$,title:^({window_name})\"", 
+                       shell=True)
     else:
-        subprocess.run(f"hyprctl keyword windowrulev2 \"tile,class:^(Tk)$,title:^({window_name})\"")
+        subprocess.run(f"hyprctl keyword windowrulev2 \"tile,class:^(Tk)$,title:^({window_name})\"", 
+                       shell=True)
     
 
 def get_monitors() -> list[str]:
-    monitors = subprocess.run("hyprctl monitors | awk '/Monitor.*/{print $2}'", 
-                              shell=True, capture_output=True, text=True)
+    monitors = subprocess.run("hyprctl monitors | awk '/Monitor.*/{print $2}'", shell=True, 
+                              capture_output=True, text=True)
     
     return sorted(monitors.stdout.rstrip().split('\n'))
