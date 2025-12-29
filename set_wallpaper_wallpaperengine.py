@@ -20,7 +20,7 @@ class Wallpaper(NamedTuple):
 def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
     if wallpaperengine_path.exists():
         return {
-            pic_dir.name: Wallpaper(pic_dir.name, pic_dir, pic_dir / "preview.jpg") 
+            pic_dir.name: Wallpaper(pic_dir.name, pic_dir, pic_dir / next(pic_dir.glob("preview.*"), None))
             for pic_dir in wallpaperengine_path.iterdir() 
             if pic_dir.is_dir()
         }
@@ -38,19 +38,19 @@ def show_preview_picture(event):
     else:
         selection = wallpaper_list.get(selection)
         
-    print(type(selection))
+    preview_pic_path = wallpapers[selection].preview_pic_path
     
-    # wallpaper_img = Image.open(selection.preview_pic_path) \
-    #     .resize((preview_canvas.winfo_width(), preview_canvas.winfo_height()), Image.LANCZOS)
+    wallpaper_img = Image.open(preview_pic_path).resize((preview_canvas.winfo_width(), 
+            preview_canvas.winfo_height()), Image.LANCZOS)
         
-    # tk_img = ImageTk.PhotoImage(wallpaper_img) 
-    # preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
-    # preview_canvas.image = tk_img
+    tk_img = ImageTk.PhotoImage(wallpaper_img) 
+    preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
+    preview_canvas.image = tk_img
 
 
 root = Tk()
 root.title(window_title)
-root.geometry("648x256")
+root.geometry("464x256")
 root.protocol("WM_DELETE_WINDOW", lambda: on_close(root, window_title))
 force_floating_window_hyprland(window_title)
 
@@ -58,11 +58,13 @@ force_floating_window_hyprland(window_title)
 frame = Frame(root)
 frame.grid(row=0, column=0)
 
+
 # First column
 # [Top] Listbox of wallpapers
 wallpapers = dict(sorted(list_wallpaperengine_wallpapers().items()))
 wallpaper_ids = [wallpaper_id for wallpaper_id in wallpapers.keys()]
 wallpaper_list_frame = Frame(frame)
+print(wallpapers[wallpaper_ids[0]])
 
 scrollbar = Scrollbar(wallpaper_list_frame, orient="vertical")
 wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpaper_ids), 
@@ -79,7 +81,7 @@ monitor_list.pack()
 
 
 # Second column
-preview_canvas = Canvas(root, width=426, height=240, bg="white")
+preview_canvas = Canvas(root, width=240, height=240, bg="white")
 preview_canvas.grid(row=0, column=1, padx=10, pady=5)
 wallpaper_list.bind("<<ListboxSelect>>", show_preview_picture)
 
