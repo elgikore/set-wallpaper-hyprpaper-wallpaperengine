@@ -2,13 +2,14 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from pathlib import Path
 from PIL import Image, ImageTk
-from utilities import get_monitors, force_floating_window_hyprland, on_close
+from utilities import check_app_and_close, force_floating_window_hyprland, on_close
 from monitors_list_gui import MonitorList
 from typing import NamedTuple
-import sys
+import sys, subprocess
 
 window_title = "Set wallpaper from Wallpaper Engine"
 wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
+selection = ""
 
 
 class Wallpaper(NamedTuple):
@@ -31,7 +32,9 @@ def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
                              parent=frame)
         sys.exit(1)
         
-def show_preview_picture(event):
+def show_preview_picture(event) -> None:
+    global selection
+    
     selection = wallpaper_list.curselection()
     
     if not selection:
@@ -53,6 +56,10 @@ def show_preview_picture(event):
     preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
     preview_canvas.image = tk_img
 
+def apply_wallpaper():
+    check_app_and_close("linux-wallpaperengine")
+    check_app_and_close("hyprpaper")
+    subprocess.run(f"linux-wallpaperengine --screen-root {monitor_list.get()} --scaling fill -s {selection} &", shell=True)
 
 root = Tk()
 root.title(window_title)
@@ -81,7 +88,7 @@ scrollbar.pack(side="right", fill="y", pady=5)
 wallpaper_list_frame.pack(padx=10)
 
 # [Bottom] Monitor list
-monitor_list = MonitorList(frame)
+monitor_list = MonitorList(frame, apply_wallpaper)
 monitor_list.pack()
 
 
