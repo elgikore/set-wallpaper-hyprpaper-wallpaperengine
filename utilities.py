@@ -27,7 +27,7 @@ def on_close(root: Tk, window_title: str) -> None:
     force_floating_window_hyprland(window_title, is_enabled=False)
     
 
-def check_app_and_close(app_name: str) -> bool:
-    result = subprocess.run(f"if pgrep -x \"{app_name}\" > /dev/null; then killall -9 {app_name}; exit 0; fi; exit 1", shell=True)
+def close_app(regex: str) -> bool:
+    result = subprocess.run(f"pkill -f -- \"{regex}\"", shell=True)
     
     return True if result.returncode == 0 else False
