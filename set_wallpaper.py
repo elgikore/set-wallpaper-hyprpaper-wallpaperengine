@@ -87,12 +87,11 @@ def file_picker() -> None:
         initialdir=Path.home(),
         title="Select a picture as wallpaper",
         filetypes = (
-            ("All image files", "*.png"),
-            ("All image files", "*.jpg"),
-            ("All image files", "*.jpeg"),
-            ("All image files", "*.gif"),
-            ("All image files", "*.bmp"),
-            ("All image files", "*.tiff"),
+            ("Image files", "*.png"),
+            ("Image files", "*.jpg"),
+            ("Image files", "*.jpeg"),
+            ("Image files", "*.gif"),
+            ("Image files", "*.bmp")
         )
     )
 
