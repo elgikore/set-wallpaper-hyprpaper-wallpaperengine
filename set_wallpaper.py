@@ -14,13 +14,6 @@ img_path = sys.argv[1] if len(sys.argv) != 1 else ""
 window_title = "Select monitor"
 
 
-
-
-def reload_hyprpaper() -> None:
-    subprocess.run("if pgrep -x \"hyprpaper\" > /dev/null; then killall -9 hyprpaper; fi", shell=True)
-    subprocess.run("hyprpaper &", shell=True)
-
-
 # Set wallpaper
 def set_wallpaper() -> None:
     if not img_path:
@@ -46,32 +39,39 @@ def set_wallpaper() -> None:
     # If for some reason the file is not executable
     ensure_executable_script()
 
-    try:
-        with open(hyprpaper_path, 'r') as conf:
-            settings = conf.read()
-    except FileNotFoundError:
-        print("hyprpaper.conf not found!")
-        sys.exit(1)
+    current_text = ""
+    new_lines = []
+    is_monitor_in_setting = False # In case the monitor is a new entry
+    
+    with open(bg_script_path, 'r') as bg_script:
+        current_text = bg_script.read()
 
     is_monitor_in_conf = False # In case the monitor is a new entry
 
-    # Change the wallpaper
-    for line in settings.splitlines():
+    for line in current_text.splitlines():
+        if "linux-wallpaperengine" in line:
+            continue
+        
         if screen in line:
-            old_wallpaper = line.split(',')[1]
-            settings = settings.replace(old_wallpaper, img_path)
-            is_monitor_in_conf = True
-            break
+            old_preload = line.replace(f"hyprctl hyprpaper wallpaper \"{screen},",
+                    "hyprctl hyprpaper preload \"")
+            
+            new_lines.remove(old_preload)
+            new_lines.append(command_preload)
+            new_lines.append(command_wallpaper)
+            is_monitor_in_setting = True
+            continue
+        
+        new_lines.append(line)
 
-    if not is_monitor_in_conf:
-        to_append = f"\npreload = {img_path}\nwallpaper = {screen},{img_path}\n"
-        settings += to_append
+    if not is_monitor_in_setting:
+        new_lines.append(command_preload)
+        new_lines.append(command_wallpaper)
+    
+    with open(bg_script_path, 'w') as bg_script:
+        bg_script.write("\n".join(new_lines))
 
-    # Write changes to file, reload, and close
-    with open(hyprpaper_path, "w") as conf:
-        conf.write(settings)
-
-    reload_hyprpaper()
+    subprocess.run("hyprctl reload", shell=True)
 
 
 def file_picker() -> None:
