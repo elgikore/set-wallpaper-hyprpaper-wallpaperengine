@@ -52,6 +52,7 @@ def set_wallpaper() -> None:
     for line in current_text.splitlines():
         # If we are at the shebang, add it, plus "hyprpaper &" below it because 
         # the IPC commands need a running Hyprpaper instance
+        # Need sleep to run the IPC commands properly (because of Hyprpaper being loaded)
         if line == "#!/bin/bash":
             new_lines.append(line)
             new_lines.append("hyprpaper &")
