@@ -4,7 +4,8 @@ import sys, subprocess
 from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
-from utilities import get_monitors, force_floating_window_hyprland
+from utilities import get_monitors, force_floating_window_hyprland, on_close
+from monitors_list_gui import MonitorList
 
 # File path for wallpaper
 img_path = sys.argv[1] if len(sys.argv) != 1 else ""
@@ -13,9 +14,7 @@ img_path = sys.argv[1] if len(sys.argv) != 1 else ""
 window_title = "Select monitor"
 
 
-def on_close() -> None:
-    root.destroy()
-    force_floating_window_hyprland(window_title, is_enabled=False)
+
 
 def reload_hyprpaper() -> None:
     subprocess.run("if pgrep -x \"hyprpaper\" > /dev/null; then killall -9 hyprpaper; fi", shell=True)
@@ -92,7 +91,7 @@ root = Tk()
 root.title(window_title)
 root.geometry("240x200")
 force_floating_window_hyprland(window_title)
-root.protocol("WM_DELETE_WINDOW", on_close) # If the user presses the X button
+root.protocol("WM_DELETE_WINDOW", lambda: on_close(root, window_title)) # If the user presses the X button
 
 # File picker
 label1 = ttk.Label(root, text="Pick a picture")
@@ -107,16 +106,8 @@ file_picker_button = ttk.Button(root, text="Open", command=file_picker)
 file_picker_button.pack(pady=5)
 
 # Combobox and Button
-label2 = ttk.Label(root, text="Monitor to place wallpaper:")
-label2.pack(padx=10, pady=3, anchor='w')
-
-monitors = get_monitors()
-list_monitors_box = ttk.Combobox(root, values=monitors, state="readonly")
-list_monitors_box.current(0)
-list_monitors_box.pack(pady=1)
-
-ok_button = ttk.Button(root, text="OK", command=set_wallpaper)
-ok_button.pack(pady=10)
+monitor_list = MonitorList(root, command=set_wallpaper)
+monitor_list.pack()
 
 # Set styling on the readonly fields
 readonly_color = [("readonly", "white")]
