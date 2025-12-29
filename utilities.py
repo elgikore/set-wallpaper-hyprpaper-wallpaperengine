@@ -1,7 +1,7 @@
 # Shared utilites across scripts
 
 import os, subprocess
-from tkinter import Tk
+from tkinter import Tk, ttk
 
 def force_floating_window_hyprland(window_name: str, is_enabled: bool = True) -> None:
     if os.getenv("XDG_CURRENT_DESKTOP") != "Hyprland": 
@@ -31,3 +31,14 @@ def close_app(regex: str) -> bool:
     result = subprocess.run(f"pkill -f -- \"{regex}\"", shell=True)
     
     return True if result.returncode == 0 else False
+
+def readonly_field_styling() -> None:
+    readonly_color = [("readonly", "white")]
+    readonly_style = {
+        "fieldbackground": readonly_color, 
+        "background": readonly_color 
+    }
+
+    style = ttk.Style()
+    style.map("TCombobox", **readonly_style)
+    style.map("TEntry", **readonly_style)
