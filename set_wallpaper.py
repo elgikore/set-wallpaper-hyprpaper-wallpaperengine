@@ -4,7 +4,7 @@ import sys, subprocess
 from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
-from utilities import readonly_field_styling, force_floating_window_hyprland, on_close, close_app
+from utilities import *
 from monitors_list_gui import MonitorList
 
 # File path for wallpaper
@@ -39,6 +39,12 @@ def set_wallpaper() -> None:
     
     # Kill all linux-wallpaperengine instances if there is one
     close_app("linux-wallpaperengine")
+    
+    # Check if script exists; if not, create, else does nothing
+    check_and_create_script()
+        
+    # If for some reason the file is not executable
+    ensure_executable_script()
 
     try:
         with open(hyprpaper_path, 'r') as conf:
@@ -66,7 +72,6 @@ def set_wallpaper() -> None:
         conf.write(settings)
 
     reload_hyprpaper()
-    on_close()
 
 
 def file_picker() -> None:
