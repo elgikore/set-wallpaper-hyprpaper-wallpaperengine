@@ -5,7 +5,6 @@ from tkinter import Tk, ttk
 from pathlib import Path
 
 bg_script_path = Path(__file__).resolve().parent / "background.sh"
-print(bg_script_path)
 
 
 def force_floating_window_hyprland(window_name: str, is_enabled: bool = True) -> None:
