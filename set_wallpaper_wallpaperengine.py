@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk, messagebox
 from pathlib import Path
+from PIL import Image, ImageTk
 from utilities import get_monitors, force_floating_window_hyprland, on_close
 from monitors_list_gui import MonitorList
 import sys
@@ -18,23 +19,42 @@ class Wallpaper():
     def __str__(self) -> str:
         return self.id
     
-    def __eq__(self, other_wallpaper):
+    def __eq__(self, other_wallpaper) -> bool:
         if not isinstance(other_wallpaper, Wallpaper):
             return NotImplemented
         
         return self.id == other_wallpaper.id
 
 
-def list_wallpaperengine_wallpapers() -> None:
+def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
     if wallpaperengine_path.exists():
-        return [Wallpaper(pic_dir.name, pic_dir, pic_dir / "preview.jpg") 
-                    for pic_dir in wallpaperengine_path.iterdir() 
-                    if pic_dir.is_dir()]
+        return {
+            pic_dir.name: Wallpaper(pic_dir.name, pic_dir, pic_dir / "preview.jpg") 
+            for pic_dir in wallpaperengine_path.iterdir() 
+            if pic_dir.is_dir()
+        }
     else:
         messagebox.showerror("Path for Wallpaper Engine doesn't exist", "Wallpaper Engine isn't installed.",
                              detail=f"Please install Wallpaper Engine from Steam, and put the wallpapers in here: {wallpaperengine_path}.", 
                              parent=frame)
         sys.exit(1)
+        
+def show_preview_picture(event):
+    selection = wallpaper_list.curselection()
+    
+    if not selection:
+        return
+    else:
+        selection = wallpaper_list.get(selection)
+        
+    print(type(selection))
+    
+    # wallpaper_img = Image.open(selection.preview_pic_path) \
+    #     .resize((preview_canvas.winfo_width(), preview_canvas.winfo_height()), Image.LANCZOS)
+        
+    # tk_img = ImageTk.PhotoImage(wallpaper_img) 
+    # preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
+    # preview_canvas.image = tk_img
 
 
 root = Tk()
@@ -49,11 +69,12 @@ frame.grid(row=0, column=0)
 
 # First column
 # [Top] Listbox of wallpapers
-wallpapers = sorted(list_wallpaperengine_wallpapers(), key=lambda x: x.id)
+wallpapers = dict(sorted(list_wallpaperengine_wallpapers().items()))
+wallpaper_ids = [wallpaper_id for wallpaper_id in wallpapers.keys()]
 wallpaper_list_frame = Frame(frame)
 
 scrollbar = Scrollbar(wallpaper_list_frame, orient="vertical")
-wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpapers), 
+wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpaper_ids), 
                         height=6, selectmode=SINGLE, yscrollcommand=scrollbar.set)
 scrollbar.config(command=wallpaper_list.yview)
 
@@ -69,5 +90,6 @@ monitor_list.pack()
 # Second column
 preview_canvas = Canvas(root, width=426, height=240, bg="white")
 preview_canvas.grid(row=0, column=1, padx=10, pady=5)
+wallpaper_list.bind("<<ListboxSelect>>", show_preview_picture)
 
 root.mainloop()
