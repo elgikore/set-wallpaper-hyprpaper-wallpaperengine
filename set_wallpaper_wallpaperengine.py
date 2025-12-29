@@ -1,14 +1,15 @@
 from tkinter import *
-from tkinter import ttk, messagebox
+from tkinter import messagebox
 from pathlib import Path
 from PIL import Image, ImageTk
-from utilities import check_app_and_close, force_floating_window_hyprland, on_close
+from utilities import close_app, force_floating_window_hyprland, on_close
 from monitors_list_gui import MonitorList
 from typing import NamedTuple
-import sys, subprocess
+import sys, subprocess, os
 
 window_title = "Set wallpaper from Wallpaper Engine"
 wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
+bg_script_path = Path("background.sh")
 selection = ""
 
 
@@ -57,9 +58,51 @@ def show_preview_picture(event) -> None:
     preview_canvas.image = tk_img
 
 def apply_wallpaper():
-    check_app_and_close("linux-wallpaperengine")
-    check_app_and_close("hyprpaper")
-    subprocess.run(f"linux-wallpaperengine --screen-root {monitor_list.get()} --scaling fill -s {selection} &", shell=True)
+    screen = f"--screen-root {monitor_list.get()}"
+    command = f"linux-wallpaperengine {screen} --scaling fill -s {selection} &"
+    
+    close_app(screen) # Close specific monitor of linux-wallpaperengine if selection is same with screen
+    
+    # Kill all hyprpaper instances if there is one
+    close_app("hyprpaper")
+
+    if not bg_script_path.exists():
+        bg_script_path.touch()
+        bg_script_path.chmod(0o755) # Make it executable
+        
+        with open(bg_script_path, 'w') as bg_script:
+            bg_script.write("#!/bin/bash\n")
+        
+    # If for some reason the file is not executable
+    if not os.access(bg_script_path, os.X_OK):
+        bg_script_path.chmod(0o755)
+        
+    
+    current_text = ""
+    new_lines = []
+    is_monitor_in_setting = False # In case the monitor is a new entry
+    
+    with open(bg_script_path, 'r') as bg_script:
+        current_text = bg_script.read()
+        
+    for line in current_text.splitlines():
+        if "hyprpaper" in line:
+            continue
+        
+        if screen in line:
+            new_lines.append(command)
+            is_monitor_in_setting = True
+            continue
+        
+        new_lines.append(line)
+    
+    if not is_monitor_in_setting:
+        new_lines.append(command)
+    
+    with open(bg_script_path, 'w') as bg_script:
+        bg_script.write("\n".join(new_lines))
+
+    subprocess.run("hyprctl reload", shell=True)
 
 root = Tk()
 root.title(window_title)
