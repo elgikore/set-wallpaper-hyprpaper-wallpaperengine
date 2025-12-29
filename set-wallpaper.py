@@ -4,6 +4,7 @@ import sys, subprocess
 from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
+from utilities import get_monitors, force_floating_window_hyprland
 
 # File path for wallpaper
 img_path = sys.argv[1] if len(sys.argv) != 1 else ""
@@ -14,22 +15,12 @@ window_title = "Select monitor"
 
 def on_close() -> None:
     root.destroy()
-    force_floating_window(window_title, is_enabled=False)
+    force_floating_window_hyprland(window_title, is_enabled=False)
 
 def reload_hyprpaper() -> None:
     subprocess.run("if pgrep -x \"hyprpaper\" > /dev/null; then killall -9 hyprpaper; fi", shell=True)
     subprocess.run("hyprpaper &", shell=True)
 
-# Get list of monitors
-def get_monitors() -> list:
-    result = subprocess.run( 
-        "hyprctl monitors | awk '/Monitor.*:/{print $2}'", 
-        shell=True,
-        capture_output=True,
-        text=True
-    )
-
-    return sorted(result.stdout.rstrip().split('\n'))
 
 # Set wallpaper
 def set_wallpaper() -> None:
@@ -73,12 +64,6 @@ def set_wallpaper() -> None:
     reload_hyprpaper()
     on_close()
 
-# Force floating window (Hyprland); if false, set it back to normal (tiled)
-def force_floating_window(window_title: str, is_enabled: bool = True) -> None:
-    if is_enabled: 
-        subprocess.run(f"hyprctl keyword windowrulev2 \"float, title:^({window_title})$\"", shell=True)
-    else:
-        subprocess.run(f"hyprctl keyword windowrulev2 \"tile, title:^({window_title})$\"", shell=True)
 
 def file_picker() -> None:
     global img_path
@@ -106,7 +91,7 @@ def file_picker() -> None:
 root = Tk()
 root.title(window_title)
 root.geometry("240x200")
-force_floating_window(window_title)
+force_floating_window_hyprland(window_title)
 root.protocol("WM_DELETE_WINDOW", on_close) # If the user presses the X button
 
 # File picker
