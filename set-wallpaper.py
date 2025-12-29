@@ -29,7 +29,7 @@ def set_wallpaper() -> None:
                              parent=root)
         return
 
-    selected_monitor = list_monitors_box.get()
+    selected_monitor = monitor_list.get()
     hyprpaper_path = f"{Path.home()}/.config/hypr/hyprpaper.conf"
 
     # Get current hyprpaper conf
