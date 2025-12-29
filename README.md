@@ -11,7 +11,7 @@ yay -S hyprpaper linux-wallpaperengine-git python-pillow
 
 ## Installation
 Clone/download and make `set_wallpaper.py` and `set_wallpaper_wallpaperengine.py` executable:
-```
+```bash
 git clone https://github.com/elgikore/set-wallpaper-hyprpaper-wallpaperengine.git
 cd set-wallpaper-hyprpaper-wallpaperengine
 chmod +x set_wallpaper.py  set_wallpaper_wallpaperengine.py
@@ -23,4 +23,6 @@ $background = path/to/set-wallpaper-hyprpaper-wallpaperengine/background.sh
 exec = $background
 ```
 > [!NOTE]
-> The path assumes `set-wallpaper-hyprpaper-wallpaperengine` is the name of the folder. `background.sh` is automatically created after running the scripts.
+> The path assumes `set-wallpaper-hyprpaper-wallpaperengine` is the name of the folder. `background.sh` is automatically created after running either script.
+>
+> You can also do a one-liner if you prefer: `exec = path/to/set-wallpaper-hyprpaper-wallpaperengine/background.sh`.
