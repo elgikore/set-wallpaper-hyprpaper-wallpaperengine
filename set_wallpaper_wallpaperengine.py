@@ -117,7 +117,7 @@ def apply_wallpaper():
 # Main Window
 root = Tk()
 root.title(window_title)
-root.geometry("464x256")
+root.geometry("848x360")
 root.protocol("WM_DELETE_WINDOW", lambda: on_close(root, window_title))
 force_floating_window_hyprland(window_title)
 
@@ -134,7 +134,7 @@ wallpaper_list_frame = Frame(frame)
 
 scrollbar = Scrollbar(wallpaper_list_frame, orient="vertical")
 wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpaper_ids), 
-                        height=6, selectmode=SINGLE, yscrollcommand=scrollbar.set)
+                        height=12, width=55, selectmode=SINGLE, yscrollcommand=scrollbar.set)
 scrollbar.config(command=wallpaper_list.yview)
 
 wallpaper_list.pack(side="left", fill="both", pady=5)
@@ -147,7 +147,7 @@ monitor_list.pack()
 
 
 # Second column
-preview_canvas = Canvas(root, width=240, height=240, bg="white")
+preview_canvas = Canvas(root, width=340, height=340, bg="white")
 preview_canvas.grid(row=0, column=1, padx=10, pady=5)
 wallpaper_list.bind("<<ListboxSelect>>", show_preview_picture)
 
