@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from pathlib import Path
 from PIL import Image, ImageTk
-from utilities import close_app, force_floating_window_hyprland, on_close
+from utilities import close_app, force_floating_window_hyprland, on_close, readonly_field_styling
 from monitors_list_gui import MonitorList
 from typing import NamedTuple
 import sys, subprocess, os
@@ -32,7 +32,8 @@ def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
                              detail=f"Please install Wallpaper Engine from Steam, and put the wallpapers in here: {wallpaperengine_path}.", 
                              parent=frame)
         sys.exit(1)
-        
+
+
 def show_preview_picture(event) -> None:
     global selection
     
@@ -47,15 +48,15 @@ def show_preview_picture(event) -> None:
     wallpaper_img = Image.open(preview_pic_path) 
     
     if preview_pic_path.suffix == ".gif":
-        # Advance to 10 frames in case the first few frames are black
-        wallpaper_img.seek(10)
+        # Advance to 5 frames in case the first few frames are black
+        wallpaper_img.seek(5)
     
     wallpaper_img = wallpaper_img.resize((preview_canvas.winfo_width(), preview_canvas.winfo_height()), Image.LANCZOS)
-        
     tk_img = ImageTk.PhotoImage(wallpaper_img)
     
     preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
     preview_canvas.image = tk_img
+
 
 def apply_wallpaper():
     screen = f"--screen-root {monitor_list.get()}"
@@ -104,6 +105,8 @@ def apply_wallpaper():
 
     subprocess.run("hyprctl reload", shell=True)
 
+
+# Main Window
 root = Tk()
 root.title(window_title)
 root.geometry("464x256")
@@ -139,5 +142,8 @@ monitor_list.pack()
 preview_canvas = Canvas(root, width=240, height=240, bg="white")
 preview_canvas.grid(row=0, column=1, padx=10, pady=5)
 wallpaper_list.bind("<<ListboxSelect>>", show_preview_picture)
+
+# Set styling on the readonly fields
+readonly_field_styling()
 
 root.mainloop()
