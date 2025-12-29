@@ -91,7 +91,7 @@ class MonitorList(Frame):
         monitors = get_monitors()
         self.__list_monitors_box = ttk.Combobox(root, values=monitors, state="readonly")
         self.__list_monitors_box.current(0)
-        self.__list_monitors_box.pack(pady=1)
+        self.__list_monitors_box.pack(pady=1, fill="both", padx=10)
 
         ok_button = ttk.Button(root, text="OK", command=command)
         ok_button.pack(pady=10)
