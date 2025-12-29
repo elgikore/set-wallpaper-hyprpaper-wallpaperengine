@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 from utilities import *
 from monitors_list_gui import MonitorList
 from typing import NamedTuple
-import sys, subprocess
+import sys, subprocess, json, re
 
 # Main window title
 window_title = "Set wallpaper from Wallpaper Engine"
@@ -15,8 +15,8 @@ window_title = "Set wallpaper from Wallpaper Engine"
 # Wallpaper Engine wallpaper path
 wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
 
-# Listbox selection
-selection = ""
+# Listbox selection's id
+selection_id = ""
 
 # Delay in case the wallpaper fails to load
 delay = 0.5
@@ -24,37 +24,54 @@ delay = 0.5
 
 class Wallpaper(NamedTuple):
     id: str
-    path: Path
+    name: str
     preview_pic_path: Path
+    
+    def __str__(self):
+        return f"{self.name} ({self.id})"
 
 
 def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
-    if wallpaperengine_path.exists():
-        return {
-            # preview_path needs next because globbing returns an iterator and we only need the first result
-            pic_dir.name: Wallpaper(pic_dir.name, pic_dir, pic_dir / next(pic_dir.glob("preview.*"), None))
-            for pic_dir in wallpaperengine_path.iterdir() 
-            if pic_dir.is_dir()
-        }
-    else:
+    if not wallpaperengine_path.exists():
         messagebox.showerror("Path for Wallpaper Engine doesn't exist", "Wallpaper Engine isn't installed.",
                              detail=f"Please install Wallpaper Engine from Steam, and put the wallpapers in here: {wallpaperengine_path}.", 
                              parent=frame)
         on_close(root, window_title)
         sys.exit(1)
 
+    wallpapers = {}
+    
+    for pic_dir in wallpaperengine_path.iterdir():
+        if not pic_dir.is_dir():
+            continue
+        
+        json_file_path = pic_dir / "project.json"
+        metadata = None
+        
+        if not json_file_path:
+            wallpapers[pic_dir.name] = Wallpaper(pic_dir.name, "", None)
+            continue
+        
+        with open(json_file_path, 'r') as file:
+            metadata = json.load(file)
+        
+        wallpapers[pic_dir.name] = Wallpaper(pic_dir.name, metadata["title"], pic_dir / metadata["preview"])
+    
+    return wallpapers
+
 
 def show_preview_picture(event) -> None:
-    global selection
+    global selection_id
     
     selection = wallpaper_list.curselection()
-    
     if not selection:
         return
-    else:
-        selection = wallpaper_list.get(selection)
+    
+    selection = wallpaper_list.get(selection)
+    matches = re.findall(r"\((\d*)\)", selection)
+    selection_id = matches[-1] # Grab the last item inside parenthesis
         
-    preview_pic_path = wallpapers[selection].preview_pic_path
+    preview_pic_path = wallpapers[selection_id].preview_pic_path
     wallpaper_img = Image.open(preview_pic_path) 
     
     if preview_pic_path.suffix == ".gif":
@@ -70,7 +87,7 @@ def show_preview_picture(event) -> None:
 
 def apply_wallpaper():
     screen = f"--screen-root {monitor_list.get()}"
-    command = f"linux-wallpaperengine {screen} --scaling fill -s {selection} &"
+    command = f"linux-wallpaperengine {screen} --scaling fill -s {selection_id} &"
     
     # Close specific monitor of linux-wallpaperengine if selection is same with screen
     close_app(screen) 
@@ -129,11 +146,11 @@ frame.grid(row=0, column=0)
 # First column
 # [Top] Listbox of wallpapers
 wallpapers = dict(sorted(list_wallpaperengine_wallpapers().items()))
-wallpaper_ids = [wallpaper_id for wallpaper_id in wallpapers.keys()]
+wallpaper_names = [str(name) for name in wallpapers.values()]
 wallpaper_list_frame = Frame(frame)
 
 scrollbar = Scrollbar(wallpaper_list_frame, orient="vertical")
-wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpaper_ids), 
+wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpaper_names), 
                         height=12, width=55, selectmode=SINGLE, yscrollcommand=scrollbar.set)
 scrollbar.config(command=wallpaper_list.yview)
 
