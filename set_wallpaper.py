@@ -4,7 +4,7 @@ import sys, subprocess
 from tkinter import *
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
-from utilities import get_monitors, force_floating_window_hyprland, on_close
+from utilities import readonly_field_styling, force_floating_window_hyprland, on_close
 from monitors_list_gui import MonitorList
 
 # File path for wallpaper
@@ -110,14 +110,6 @@ monitor_list = MonitorList(root, command=set_wallpaper)
 monitor_list.pack()
 
 # Set styling on the readonly fields
-readonly_color = [("readonly", "white")]
-readonly_style = {
-    "fieldbackground": readonly_color, 
-    "background": readonly_color 
-}
-
-style = ttk.Style()
-style.map("TCombobox", **readonly_style)
-style.map("TEntry", **readonly_style)
+readonly_field_styling()
 
 root.mainloop()
