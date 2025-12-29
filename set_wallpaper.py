@@ -13,7 +13,7 @@ img_path = sys.argv[1] if len(sys.argv) != 1 else ""
 # Main window title
 window_title = "Select monitor"
 
-# Delay to load the wallpaper properly
+# Delay between Hyprpaper and IPC commands to load the wallpaper properly
 delay = 0.5
 
 
@@ -57,7 +57,6 @@ def set_wallpaper() -> None:
             new_lines.append(line)
             new_lines.append("hyprpaper &")
             new_lines.append(f"sleep {delay}")
-            print(new_lines)
             continue
         
         if "linux-wallpaperengine" in line:
