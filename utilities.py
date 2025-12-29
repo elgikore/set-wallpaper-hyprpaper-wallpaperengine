@@ -1,7 +1,11 @@
-# Shared utilites across scripts
+# Shared utilites and variables across scripts
 
 import os, subprocess
 from tkinter import Tk, ttk
+from pathlib import Path
+
+bg_script_path = Path("background.sh")
+
 
 def force_floating_window_hyprland(window_name: str, is_enabled: bool = True) -> None:
     if os.getenv("XDG_CURRENT_DESKTOP") != "Hyprland": 
@@ -32,6 +36,7 @@ def close_app(regex: str) -> bool:
     
     return True if result.returncode == 0 else False
 
+
 def readonly_field_styling() -> None:
     readonly_color = [("readonly", "white")]
     readonly_style = {
@@ -42,3 +47,34 @@ def readonly_field_styling() -> None:
     style = ttk.Style()
     style.map("TCombobox", **readonly_style)
     style.map("TEntry", **readonly_style)
+
+
+def check_and_create_script() -> bool:
+    """
+    True if it creates a script.
+    
+    False if the path is invalid (not .py or .sh) or file exists.
+    """
+    if bg_script_path.suffix not in {".py", ".sh"}:
+        return False
+    
+    if not bg_script_path.exists():
+        bg_script_path.touch()
+        bg_script_path.chmod(0o755) # Make it executable
+        
+        with open(bg_script_path, 'w') as bg_script:
+            bg_script.write("#!/bin/bash\n")
+        
+        return True
+    else:
+        return False
+
+
+def ensure_executable_script() -> bool:
+    """True if the file isn't executable. False if it already is."""
+    
+    if not os.access(bg_script_path, os.X_OK):
+        bg_script_path.chmod(0o755)
+        return True
+    else:
+        return False
