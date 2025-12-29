@@ -4,26 +4,17 @@ from pathlib import Path
 from PIL import Image, ImageTk
 from utilities import get_monitors, force_floating_window_hyprland, on_close
 from monitors_list_gui import MonitorList
+from typing import NamedTuple
 import sys
 
 window_title = "Set wallpaper from Wallpaper Engine"
 wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
 
 
-class Wallpaper():
-    def __init__(self, id: str, path: Path, preview_pic_path: Path):
-        self.id = id
-        self.path = path
-        self.preview_pic_path = preview_pic_path
-    
-    def __str__(self) -> str:
-        return self.id
-    
-    def __eq__(self, other_wallpaper) -> bool:
-        if not isinstance(other_wallpaper, Wallpaper):
-            return NotImplemented
-        
-        return self.id == other_wallpaper.id
+class Wallpaper(NamedTuple):
+    id: str
+    path: Path
+    preview_pic_path: Path
 
 
 def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
