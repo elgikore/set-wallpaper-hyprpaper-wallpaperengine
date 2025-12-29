@@ -1,7 +1,6 @@
-import subprocess, os
 from tkinter import *
 from tkinter import ttk
-from utilities import get_monitors
+from utilities import get_monitors, force_floating_window_hyprland
 
 window_name = "Set wallpaper from Wallpaper Engine"
 
