@@ -3,9 +3,9 @@
 from tkinter import *
 from tkinter import messagebox
 from pathlib import Path
-from PIL import Image, ImageTk
+from PIL import ImageTk
+from PIL import Image as PilImage
 from utilities import *
-from monitors_list_gui import MonitorList
 from typing import NamedTuple
 import sys, subprocess, json, re
 
@@ -72,13 +72,13 @@ def show_preview_picture(event) -> None:
     selection_id = matches[-1] # Grab the last item inside parenthesis
         
     preview_pic_path = wallpapers[selection_id].preview_pic_path
-    wallpaper_img = Image.open(preview_pic_path) 
+    wallpaper_img = PilImage.open(preview_pic_path) 
     
     if preview_pic_path.suffix == ".gif":
         # Advance to 5 frames in case the first few frames are black
         wallpaper_img.seek(5)
     
-    wallpaper_img = wallpaper_img.resize((preview_canvas.winfo_width(), preview_canvas.winfo_height()), Image.LANCZOS)
+    wallpaper_img = wallpaper_img.resize((preview_canvas.winfo_width(), preview_canvas.winfo_height()), PilImage.LANCZOS)
     tk_img = ImageTk.PhotoImage(wallpaper_img)
     
     preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
