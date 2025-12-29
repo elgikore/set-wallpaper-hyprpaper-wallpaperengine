@@ -13,6 +13,9 @@ img_path = sys.argv[1] if len(sys.argv) != 1 else ""
 # Main window title
 window_title = "Select monitor"
 
+# Delay to load the wallpaper properly
+delay = 0.5
+
 
 # Set wallpaper
 def set_wallpaper() -> None:
@@ -46,9 +49,16 @@ def set_wallpaper() -> None:
     with open(bg_script_path, 'r') as bg_script:
         current_text = bg_script.read()
 
-    is_monitor_in_conf = False # In case the monitor is a new entry
-
     for line in current_text.splitlines():
+        # If we are at the shebang, add it, plus "hyprpaper &" below it because 
+        # the IPC commands need a running Hyprpaper instance
+        if line == "#!/bin/bash":
+            new_lines.append(line)
+            new_lines.append("hyprpaper &")
+            new_lines.append(f"sleep {delay}")
+            print(new_lines)
+            continue
+        
         if "linux-wallpaperengine" in line:
             continue
         
