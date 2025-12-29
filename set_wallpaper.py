@@ -91,6 +91,7 @@ def file_picker() -> None:
     )
 
     path_show.config(state=ACTIVE)
+    path_show.delete(0, "end")
     path_show.insert(0, img_path)
     path_show.config(state="readonly")
 
