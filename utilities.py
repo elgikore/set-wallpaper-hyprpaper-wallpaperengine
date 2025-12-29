@@ -33,7 +33,7 @@ def on_close(root: Tk, window_title: str) -> None:
     
 
 def close_app(regex: str) -> bool:
-    result = subprocess.run(f"pkill -f -- \"{regex}\"", shell=True)
+    result = subprocess.run(f"pkill -9 -f -- \"{regex}\"", shell=True)
     
     return True if result.returncode == 0 else False
 
