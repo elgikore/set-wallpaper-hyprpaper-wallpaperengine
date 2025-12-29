@@ -18,7 +18,7 @@ wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/")
 # Listbox selection's id
 selection_id = ""
 
-# Delay in case the wallpaper fails to load
+# Delay to ensure it loads
 delay = 0.5
 
 

@@ -54,7 +54,7 @@ def set_wallpaper() -> None:
         current_text = bg_script.read()
 
     for line in current_text.splitlines(): 
-        # Skip these keywords; the first 2 are already added, the last one is not needed
+        # Skip these keywords; the first 3 are already added, the last one is not needed
         if any(keyword in line for keyword in skip_keywords):
             continue
         
