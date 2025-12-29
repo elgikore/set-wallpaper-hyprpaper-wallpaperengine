@@ -25,7 +25,7 @@ def reload_hyprpaper() -> None:
 def set_wallpaper() -> None:
     if not img_path:
         messagebox.showerror("Invalid path!", "No picture selected.",
-                             detail="Please select a picture.", 
+                             detail="Please select a picture.",
                              parent=root)
         return
 
