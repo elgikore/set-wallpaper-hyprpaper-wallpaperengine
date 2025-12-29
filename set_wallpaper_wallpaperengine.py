@@ -20,6 +20,7 @@ class Wallpaper(NamedTuple):
 def list_wallpaperengine_wallpapers() -> None | dict[Wallpaper]:
     if wallpaperengine_path.exists():
         return {
+            # preview_path needs next because globbing returns an iterator and we only need the first result
             pic_dir.name: Wallpaper(pic_dir.name, pic_dir, pic_dir / next(pic_dir.glob("preview.*"), None))
             for pic_dir in wallpaperengine_path.iterdir() 
             if pic_dir.is_dir()
@@ -39,11 +40,16 @@ def show_preview_picture(event):
         selection = wallpaper_list.get(selection)
         
     preview_pic_path = wallpapers[selection].preview_pic_path
+    wallpaper_img = Image.open(preview_pic_path) 
     
-    wallpaper_img = Image.open(preview_pic_path).resize((preview_canvas.winfo_width(), 
-            preview_canvas.winfo_height()), Image.LANCZOS)
+    if preview_pic_path.suffix == ".gif":
+        # Advance to 10 frames in case the first few frames are black
+        wallpaper_img.seek(10)
+    
+    wallpaper_img = wallpaper_img.resize((preview_canvas.winfo_width(), preview_canvas.winfo_height()), Image.LANCZOS)
         
-    tk_img = ImageTk.PhotoImage(wallpaper_img) 
+    tk_img = ImageTk.PhotoImage(wallpaper_img)
+    
     preview_canvas.create_image(0, 0, anchor="nw", image=tk_img) 
     preview_canvas.image = tk_img
 
@@ -64,7 +70,6 @@ frame.grid(row=0, column=0)
 wallpapers = dict(sorted(list_wallpaperengine_wallpapers().items()))
 wallpaper_ids = [wallpaper_id for wallpaper_id in wallpapers.keys()]
 wallpaper_list_frame = Frame(frame)
-print(wallpapers[wallpaper_ids[0]])
 
 scrollbar = Scrollbar(wallpaper_list_frame, orient="vertical")
 wallpaper_list = Listbox(wallpaper_list_frame, listvariable=Variable(value=wallpaper_ids), 
