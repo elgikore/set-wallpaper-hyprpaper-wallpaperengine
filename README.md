@@ -40,6 +40,12 @@ Modify the delay in either files. You should see `delay = 0.5` (default value) i
 <br><br>
 
 
+**Some Wallpaper Engine wallpapers didn't show properly or glitched!**
+
+`linux-wallpaperengine` sometimes has issues when loading complex Wallpaper Engine wallpapers. Also see its ![common issues](https://github.com/Almamu/linux-wallpaperengine?tab=readme-ov-file#-common-issues).
+<br><br>
+
+
 **I want to modify how the wallpaper is set up.**
 
 The default commands being set are:
