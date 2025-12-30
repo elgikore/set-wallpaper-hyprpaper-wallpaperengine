@@ -39,6 +39,7 @@ Just run either `./set_wallpaper.py` or `./set_wallpaper_wallpaperengine.py`, an
 Modify the delay in either files. You should see `delay = 0.5` (default value) in the file.
 <br><br>
 
+
 **I want to modify how the wallpaper is set up.**
 
 The default commands being set are:
@@ -53,3 +54,15 @@ command = f"linux-wallpaperengine {screen} --scaling fill -s {selection_id} &"
 for `set_wallpaper.py` and `set_wallpaper_wallpaperengine.py` respectively. 
 
 It supports any valid commands for `hyprctl hyprpaper` and `linux-wallpaperengine` respectively. The only thing to remmber is that `{screen}` and `{img_path}` should be present for the former, and `{screen}` and `{selection_id}` for the latter.
+<br><br>
+
+
+**I have a different folder where my Wallpaper Engine wallpapers are installed.**
+
+`set_wallpaper_wallpaperengine.py` assumes that Wallpaper Engine installs your wallpapers in `~/.steam/steam/steamapps/workshop/content/431960/`. 
+```python
+# Wallpaper Engine wallpaper path
+wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
+```
+
+If you have a different folder, ensure the name of the folder ends with 431960 (Wallpaper Engine ID) and inside that folder is populated with IDs of your installed wallpapers as their folder name.
