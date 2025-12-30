@@ -1,5 +1,12 @@
 # :framed_picture: A Wallpaper Setter for Hyprpaper and Wallpaper Engine* :night_with_stars:
 
+<p align="center">
+  <img src="screenshots/screenshot1.jpg" width="49%" />
+  <img src="screenshots/screenshot2.jpg" width="49%" />
+  <br>
+  <sup><i>[L to R] <code>set_wallpaper_wallpaperengine.py</code>, <code>set_wallpaper.py</code>.</i></sup>
+</p>
+
 Bring the best of both worlds with a minimal GUI wallpaper setter for Hyprpaper (for static backgrounds) and Wallpaper Engine* (*using `linux-wallpaperengine`) for animated wallpapers in Hyprland. 
 
 Designed with minimal dependencies in Python (Pillow being the only one) in mind so that the script is portable.
