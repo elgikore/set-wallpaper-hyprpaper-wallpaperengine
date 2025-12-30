@@ -16,8 +16,7 @@ window_title = "Select monitor"
 delay = 0.5
 
 
-# Set wallpaper
-def set_wallpaper() -> None:
+def apply_wallpaper() -> None:
     if not img_path:
         messagebox.showerror("Invalid path!", "No picture selected.",
                              detail="Please select a picture.",
@@ -122,7 +121,7 @@ file_picker_button = ttk.Button(root, text="Open", command=file_picker)
 file_picker_button.pack(pady=5)
 
 # Combobox and Button
-monitor_list = MonitorList(root, command=set_wallpaper)
+monitor_list = MonitorList(root, command=apply_wallpaper)
 monitor_list.pack()
 
 # Set styling on the readonly fields
