@@ -138,7 +138,7 @@ def apply_wallpaper() -> None:
 # Main Window
 root = Tk()
 root.title(window_title)
-root.geometry("848x360")
+root.geometry("840x360")
 root.protocol("WM_DELETE_WINDOW", lambda: on_close(root, window_title))
 force_floating_window_hyprland(window_title)
 
@@ -149,10 +149,10 @@ frame.grid(row=0, column=0)
 
 # First column
 # [Top] Listbox of wallpapers
-wallpapers = dict(sorted(list_wallpaperengine_wallpapers().items()))
+wallpapers = list_wallpaperengine_wallpapers()
 
 # Convert to string representation for listbox
-wallpaper_names = [str(name) for name in wallpapers.values()]
+wallpaper_names = sorted([str(name) for name in wallpapers.values()])
 
 wallpaper_list_frame = Frame(frame)
 
