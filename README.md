@@ -26,3 +26,6 @@ exec = $background
 > The path assumes `set-wallpaper-hyprpaper-wallpaperengine` is the name of the folder. `background.sh` is automatically created after running either script.
 >
 > You can also do a one-liner if you prefer: `exec = path/to/set-wallpaper-hyprpaper-wallpaperengine/background.sh`.
+
+### For multiple monitors (optional)
+Ensure it is set up ![correctly](https://wiki.hypr.land/Configuring/Monitors/) in your `hyprland.conf`. Like in the wiki, the recommended rule for random monitors are: `monitor = , preferred, auto, 1`. Both Python scripts handle multiple monitors gracefully.
