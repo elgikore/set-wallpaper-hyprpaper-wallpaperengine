@@ -109,7 +109,7 @@ force_floating_window_hyprland(window_title)
 root.protocol("WM_DELETE_WINDOW", lambda: on_close(root, window_title)) # If the user presses the X button
 
 # File picker
-label1 = ttk.Label(root, text="Pick a picture")
+label1 = ttk.Label(root, text="Pick a picture:")
 label1.pack(padx=10, pady=3, anchor='w')
 
 path_show = ttk.Entry()
