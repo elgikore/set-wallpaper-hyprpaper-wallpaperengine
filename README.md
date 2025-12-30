@@ -1,6 +1,8 @@
-# A Wallpaper Setter for Hyprpaper and Wallpaper Engine*
+# :framed_picture: A Wallpaper Setter for Hyprpaper and Wallpaper Engine* :night_with_stars:
 
-Bring the best of both worlds with a minimal GUI wallpaper setter for Hyprpaper (for static backgrounds) and Wallpaper Engine* (*using `linux-wallpaperengine`) for animated wallpapers in Hyprland. Designed with minimal dependencies in Python (Pillow being the only one) so that the script is portable.
+Bring the best of both worlds with a minimal GUI wallpaper setter for Hyprpaper (for static backgrounds) and Wallpaper Engine* (*using `linux-wallpaperengine`) for animated wallpapers in Hyprland. 
+
+Designed with minimal dependencies in Python (Pillow being the only one) so that the script is portable.
 
 ---
 
