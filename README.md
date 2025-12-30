@@ -1,3 +1,5 @@
+Bring the best of both worlds with a minimal GUI wallpaper switcher for Hyprpaper (for static backgrounds) and Wallpaper Engine (using `linux-wallpaperengine`) for animated wallpapers in Hyprland. Designed with minimal dependencies in Python (Pillow being the only one) so that the script is portable.
+
 # Getting Started
 ## Dependencies
 The files assume that you have installed ![Hyprland](https://wiki.hypr.land/Getting-Started/Installation/).
