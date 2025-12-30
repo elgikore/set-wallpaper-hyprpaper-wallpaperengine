@@ -107,6 +107,8 @@ def apply_wallpaper() -> None:
     
     current_text = ""
     new_lines = ["#!/bin/bash", f"sleep {delay}"]
+    
+    # Skip these keywords; the first 2 are already added, the last one is not needed
     skip_keywords = {"sleep", "#!/bin/bash", "hyprpaper"}
     
     is_monitor_in_setting = False # In case the monitor is a new entry
@@ -115,7 +117,6 @@ def apply_wallpaper() -> None:
         current_text = bg_script.read()
         
     for line in current_text.splitlines():
-        # Skip these keywords; the first 2 are already added, the last one is not needed
         if any(keyword in line for keyword in skip_keywords):
             continue
         

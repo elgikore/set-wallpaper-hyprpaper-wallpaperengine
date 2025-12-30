@@ -45,6 +45,8 @@ def apply_wallpaper() -> None:
     # Need "hyprpaper &" below it because the IPC commands need a running Hyprpaper instance
     # Need sleep to run the IPC commands properly (because of Hyprpaper being loaded)
     new_lines = ["#!/bin/bash", "hyprpaper &", f"sleep {delay}"]
+    
+    # Skip these keywords; the first 3 are already added, the last one is not needed
     skip_keywords = {"sleep", "#!/bin/bash", "hyprpaper &", "linux-wallpaperengine"}
     
     is_monitor_in_setting = False # In case the monitor is a new entry
@@ -53,7 +55,6 @@ def apply_wallpaper() -> None:
         current_text = bg_script.read()
 
     for line in current_text.splitlines(): 
-        # Skip these keywords; the first 3 are already added, the last one is not needed
         if any(keyword in line for keyword in skip_keywords):
             continue
         
