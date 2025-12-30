@@ -29,3 +29,6 @@ exec = $background
 
 ### For multiple monitors (optional)
 Ensure it is set up ![correctly](https://wiki.hypr.land/Configuring/Monitors/) in your `hyprland.conf`. Like in the wiki, the recommended rule for random monitors are: `monitor = , preferred, auto, 1`. Both Python scripts handle multiple monitors gracefully.
+
+# Usage
+Just run either `./set_wallpaper.py` or `./set_wallpaper_wallpaperengine.py`, and then select your wallpaper of choice and its placement in monitor.
