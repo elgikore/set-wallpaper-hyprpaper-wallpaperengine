@@ -7,6 +7,9 @@ from pathlib import Path
 
 bg_script_path = Path(__file__).resolve().parent / "background.sh"
 
+if bg_script_path.suffix != ".sh":
+    raise RuntimeError(f"bg_script_path is not .sh! ({bg_script_path})")
+
 
 def force_floating_window_hyprland(window_name: str, is_enabled: bool = True) -> None:
     if os.getenv("XDG_CURRENT_DESKTOP") != "Hyprland": 
