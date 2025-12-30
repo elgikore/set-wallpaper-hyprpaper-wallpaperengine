@@ -2,7 +2,7 @@
 
 Bring the best of both worlds with a minimal GUI wallpaper setter for Hyprpaper (for static backgrounds) and Wallpaper Engine* (*using `linux-wallpaperengine`) for animated wallpapers in Hyprland. 
 
-Designed with minimal dependencies in Python (Pillow being the only one) so that the script is portable.
+Designed with minimal dependencies in Python (Pillow being the only one) in mind so that the script is portable.
 
 ---
 
@@ -50,6 +50,9 @@ Just run either of them and then select your wallpaper of choice and its placeme
 ```
 
 For `./set_wallpaper.py`, `[img_path]` opens the script with the textbox filled with the path of the image, ready to be set with your specified monitor. It is optional.
+
+> [!WARNING]
+> If you are setting a Wallpaper engine wallpaper, `set_wallpaper_wallpaperengine.py` kills all instances of `hyprpaper` if it is running. Likewise, if there are running instances of `linux-wallpaperengine` while setting a wallpaper for Hyprpaper in `set_wallpaper.py`, it will kill all instances of it. This is done so that there are no conflicts when setting wallpapers.
 
 ---
 
