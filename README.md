@@ -1,3 +1,9 @@
+# A Wallpaper Setter for Hyprpaper and Wallpaper Engine*
+
+Bring the best of both worlds with a minimal GUI wallpaper setter for Hyprpaper (for static backgrounds) and Wallpaper Engine* (*using `linux-wallpaperengine`) for animated wallpapers in Hyprland. Designed with minimal dependencies in Python (Pillow being the only one) so that the script is portable.
+
+---
+
 # Getting Started
 ## Dependencies
 The files assume that you have installed ![Hyprland](https://wiki.hypr.land/Getting-Started/Installation/).
@@ -23,15 +29,27 @@ $background = path/to/set-wallpaper-hyprpaper-wallpaperengine/background.sh
 exec = $background
 ```
 > [!NOTE]
-> The path assumes `set-wallpaper-hyprpaper-wallpaperengine` is the name of the folder. `background.sh` is automatically created after running either script.
+> The path assumes `set-wallpaper-hyprpaper-wallpaperengine` is the name of the folder. `background.sh` is automatically created or modified after running either script.
 >
 > You can also do a one-liner if you prefer: `exec = path/to/set-wallpaper-hyprpaper-wallpaperengine/background.sh`.
 
 ### For multiple monitors (optional)
 Ensure it is set up ![correctly](https://wiki.hypr.land/Configuring/Monitors/) in your `hyprland.conf`. Like in the wiki, the recommended rule for random monitors are: `monitor = , preferred, auto, 1`. Both Python scripts handle multiple monitors gracefully.
 
+---
+
 # Usage
-Just run either `./set_wallpaper.py` or `./set_wallpaper_wallpaperengine.py`, and then select your wallpaper of choice and its placement in monitor.
+Just run either of them and then select your wallpaper of choice and its placement in monitor.
+```bash
+./set_wallpaper.py [img_path]
+```
+```bash
+./set_wallpaper_wallpaperengine.py
+```
+
+For `./set_wallpaper.py`, `[img_path]` opens the script with the textbox filled with the path of the image, ready to be set with your specified monitor. It is optional.
+
+---
 
 # Troubleshooting/Modifications
 **Wallpaper doesn't load at startup!**
