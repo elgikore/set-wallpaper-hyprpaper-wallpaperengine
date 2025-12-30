@@ -32,3 +32,43 @@ Ensure it is set up ![correctly](https://wiki.hypr.land/Configuring/Monitors/) i
 
 # Usage
 Just run either `./set_wallpaper.py` or `./set_wallpaper_wallpaperengine.py`, and then select your wallpaper of choice and its placement in monitor.
+
+# Troubleshooting/Modifications
+**Wallpaper doesn't load at startup!**
+
+Modify the delay in either files. You should see `delay = 0.5` (default value) in the file.
+<br><br>
+
+
+**Some Wallpaper Engine wallpapers didn't show properly or glitched!**
+
+`linux-wallpaperengine` sometimes has issues when loading complex Wallpaper Engine wallpapers. Also see its ![common issues](https://github.com/Almamu/linux-wallpaperengine?tab=readme-ov-file#-common-issues).
+<br><br>
+
+
+**I want to modify how the wallpaper is set up.**
+
+The default commands being set are:
+```python
+command_preload = f"hyprctl hyprpaper preload \"{img_path}\""
+command_wallpaper = f"hyprctl hyprpaper wallpaper \"{screen},{img_path}\""
+```
+and
+```python
+command = f"linux-wallpaperengine {screen} --scaling fill -s {selection_id} &"
+```
+for `set_wallpaper.py` and `set_wallpaper_wallpaperengine.py` respectively. 
+
+It supports any valid commands for `hyprctl hyprpaper` and `linux-wallpaperengine` respectively. The only thing to remmber is that `{screen}` and `{img_path}` should be present for the former, and `{screen}` and `{selection_id}` for the latter.
+<br><br>
+
+
+**I have a different folder where my Wallpaper Engine wallpapers are installed.**
+
+`set_wallpaper_wallpaperengine.py` assumes that Wallpaper Engine installs your wallpapers in `~/.steam/steam/steamapps/workshop/content/431960/`. 
+```python
+# Wallpaper Engine wallpaper path
+wallpaperengine_path = Path("~/.steam/steam/steamapps/workshop/content/431960/").expanduser()
+```
+
+If you have a different folder, ensure the name of the folder ends with 431960 (Wallpaper Engine ID) and inside that folder is populated with IDs of your installed wallpapers as their folder name.
