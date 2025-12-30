@@ -51,24 +51,16 @@ def readonly_field_styling() -> None:
 
 
 def check_and_create_script() -> bool:
-    """
-    True if it creates a script.
+    """True if it creates a script. False if file exists."""
     
-    False if the path is invalid (not .py or .sh) or file exists.
-    """
-    if bg_script_path.suffix not in {".py", ".sh"}:
+    if bg_script_path.exists():
         return False
     
-    if not bg_script_path.exists():
-        bg_script_path.touch()
-        bg_script_path.chmod(0o755) # Make it executable
-        
-        with open(bg_script_path, 'w') as bg_script:
-            bg_script.write("#!/bin/bash\n")
-        
-        return True
-    else:
-        return False
+    bg_script_path.touch()
+    bg_script_path.chmod(0o755) # Make it executable
+    
+    with open(bg_script_path, 'w') as bg_script:
+        bg_script.write("#!/bin/bash\n")
 
 
 def ensure_executable_script() -> bool:
